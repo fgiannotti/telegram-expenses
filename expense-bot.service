@@ -1,0 +1,32 @@
+[Unit]
+Description=Telegram expense bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=expense-bot
+Group=expense-bot
+WorkingDirectory=/var/lib/expense-bot
+EnvironmentFile=/etc/expense-bot.env
+ExecStart=/usr/local/bin/expense-bot
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=full
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=expense-bot
+
+[Install]
+WantedBy=multi-user.target
+
+# Every directive above exists in systemd 229, which is what Ubuntu 16.04 ships.
+# Deliberately absent, all newer than 229 and therefore ignored or rejected here:
+#   StateDirectory=     (235) - install.sh creates /var/lib/expense-bot instead
+#   ProtectSystem=strict(232) - `full` is the strongest value 229 understands
+#   DynamicUser=        (232) - install.sh creates a real system user instead
+#   ReadWritePaths=     (231) - unnecessary: ProtectSystem=full leaves /var writable,
+#                               which is what keeps the SQLite database reachable

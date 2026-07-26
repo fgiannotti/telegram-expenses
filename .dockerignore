@@ -1,0 +1,29 @@
+# The build stage does `COPY . .`, so everything the compiler does not need is
+# excluded here. Keeping this list tight also keeps the build cache stable:
+# editing the README must not trigger a full recompile.
+
+.git
+.gitignore
+.github
+.vscode
+.idea
+.cursor
+
+# Build outputs, host-side and exported
+target
+dist
+
+# Secrets and local state must never enter an image layer
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+
+# Deployment artifacts, all host- or server-side only
+Dockerfile
+.dockerignore
+deploy.sh
+install.sh
+expense-bot.service
+*.md

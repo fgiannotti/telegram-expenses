@@ -1,0 +1,29 @@
+[package]
+name = "expense-bot"
+version = "0.1.0"
+edition = "2021"
+# ureq 3.3 puts the floor at 1.85, but libsqlite3-sys 0.38 uses cfg_select! in
+# its build script, which is only stable from 1.95. Build with a current stable
+# image (rust:alpine, rust:1); a pinned 1.85 image will not work.
+rust-version = "1.95"
+# Resolver 3 honours rust-version when picking versions, so a future
+# `cargo update` cannot silently raise the floor further without saying so.
+resolver = "3"
+
+[[bin]]
+name = "expense-bot"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0.104"
+chrono = "0.4.45"
+chrono-tz = "0.10.4"
+dotenvy = "0.15.7"
+frankenstein = { version = "0.50", default-features = false, features = ["client-ureq"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
+
+[profile.release]
+lto = true
+opt-level = "z"
+strip = true
+codegen-units = 1
